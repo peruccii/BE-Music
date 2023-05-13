@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String          @id @default(uuid())
+  name          String
+  email         String          @unique
+  senha         String
+  created_at    DateTime        @default(now())
+  updated_at    DateTime        @updatedAt
+  music_curtida MusicCurtida[]  @relation("user")
+  MusicFavorita MusicFavorita[] @relation("user")
+  Playlists     PlaylistUser[]  @relation("user")
+
+  @@map("users")
+}
+
+model Playlist {
+  id                  String          @id @default(uuid())
+  title               String          @unique
+  photo               String
+  isPublic            Boolean
+  musicas             PlaylistUser[]  @relation("playlist")
+  musicas_adicionadas musicPlaylist[] @relation("playlist")
+}
+
+model Music {
+  id             String          @id @default(uuid())
+  title          String          @unique
+  photo          String
+  cantor         String
+  url_music      String
+  realease_date  DateTime
+  music_curtida  MusicCurtida[]  @relation("music")
+  music_favorita MusicFavorita[] @relation("music")
+  musicPlaylist  musicPlaylist[] @relation("music")
+
+  @@map("musics")
+}
+
+model PlaylistUser {
+  user       User     @relation("user", fields: [userId], references: [id])
+  userId     String
+  playlist   Playlist @relation("playlist", fields: [playlistId], references: [id])
+  playlistId String
+
+  @@id([userId, playlistId])
+  @@map("playlist_user")
+}
+
+model musicPlaylist {
+  playlist   Playlist @relation("playlist", fields: [playlistId], references: [id])
+  playlistId String
+  music      Music    @relation("music", fields: [musicId], references: [id])
+  musicId    String
+
+  @@id([musicId, playlistId])
+  @@map("music_playlist")
+}
+
+model MusicCurtida {
+  user    User   @relation("user", fields: [userId], references: [id])
+  userId  String
+  music   Music  @relation("music", fields: [musicId], references: [id])
+  musicId String
+
+  @@id([userId, musicId])
+  @@map("music_curtida")
+}
+
+model MusicFavorita {
+  user    User   @relation("user", fields: [userId], references: [id])
+  userId  String
+  music   Music  @relation("music", fields: [musicId], references: [id])
+  musicId String
+
+  @@id([userId, musicId])
+  @@map("music_favorita")
+}
