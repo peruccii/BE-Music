@@ -11,6 +11,7 @@ import { CreateMusicPlaylistController } from '../controllers/CreateMusicPlaylis
 import { AuthUserController } from '../authUser/AuthUserController';
 import { ensureAuthentication } from '../middlewares/ensureAuthentication';
 
+
 const createUserController = new CreateUserController();
 const createMusicController = new CreateMusicController();
 const createMusicCurtida = new CreateMusicCurtidaController()
@@ -21,6 +22,7 @@ const createPlaylistController = new CreatePlaylistController()
 const createPlayListController = new CreatePlaylistUserController()
 const createMusicPlaylistController = new CreateMusicPlaylistController()
 const authUserController = new AuthUserController() 
+
 
 const Routes = Router()
 

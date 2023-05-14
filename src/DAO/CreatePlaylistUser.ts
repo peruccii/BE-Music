@@ -1,9 +1,9 @@
-import { PlaylistUserSchema } from '../interfaces/PlaylistUserSchema';
+import { PlaylistUserInterface } from '../interfaces/PlaylistUserInterface';
 import { prismaClient } from '../database/prismaClient';
 import { AppError } from '../errors/AppError';
 
 export class CreatePlaylistUser {
-   async execute({ playlistId, userId }: PlaylistUserSchema ): Promise<void> { // void
+   async execute({ playlistId, userId }: PlaylistUserInterface ): Promise<void> { // void
       //Verificar se a playlist existe
      
       

@@ -1,10 +1,10 @@
 import { prismaClient } from '../database/prismaClient';
 import { AppError } from '../errors/AppError';
-import { MusicFavoritaSchema } from '../interfaces/MusicFavoritaSchema';
+import { MusicFavoritaInterface } from '../interfaces/MusicFavoritaInterface';
 
 
 export class CreateMusicFavorita {
-   async execute({ musicId, userId }: MusicFavoritaSchema): Promise<void> { // void
+   async execute({ musicId, userId }: MusicFavoritaInterface): Promise<void> { // void
       //Verificar se a musica favorita existe
      
       

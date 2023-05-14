@@ -1,11 +1,11 @@
 import { User } from '@prisma/client';
 import { prismaClient } from '../database/prismaClient';
-import { UserSchema } from '../interfaces/UserSchema';
+import { UserInterface } from '../interfaces/UserInterface';
 import { AppError } from '../errors/AppError';
 import bcrypt from "bcrypt"
 
 export class CreateUser { // UserSchema = Interface de user
-  async execute({ name, email, senha}: UserSchema): Promise<User> { // Promise<tabela User do banco de dados>, ele espera retornar se baseando nessr banco de dados
+  async execute({ name, email, senha}: UserInterface): Promise<User> { // Promise<tabela User do banco de dados>, ele espera retornar se baseando nessr banco de dados
     // Verificar se o usuario ja existe
     const userAlreadyExists = await prismaClient.user.findUnique({ // FindUnique para achar algum argumento que seja proprio
       where : {

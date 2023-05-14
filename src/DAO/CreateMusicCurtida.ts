@@ -1,10 +1,10 @@
 import { prismaClient } from '../database/prismaClient';
 import { AppError } from '../errors/AppError';
-import { MusicCurtidaSchema } from '../interfaces/MusicCurtidaSchema';
+import { MusicCurtidaInterface } from '../interfaces/MusicCurtidaInterface';
 
 
 export class CreateMusicCurtida {
-   async execute({ musicId, userId }: MusicCurtidaSchema): Promise<void> { // void
+   async execute({ musicId, userId }: MusicCurtidaInterface): Promise<void> { // void
       //Verificar se a musica existe
      
       

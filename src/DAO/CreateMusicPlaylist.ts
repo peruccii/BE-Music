@@ -1,9 +1,9 @@
 import { prismaClient } from '../database/prismaClient';
 import { AppError } from '../errors/AppError';
-import { MusicPlaylistSchema } from '../interfaces/MusicPlaylistSchema';
+import { MusicPlaylistInterface } from '../interfaces/MusicPlaylistInterface';
 
 export class CreateMusicPlaylist {
-   async execute({ musicId, playlistId }: MusicPlaylistSchema): Promise<void> { // void
+   async execute({ musicId, playlistId }: MusicPlaylistInterface): Promise<void> { // void
       //Verificar se a musica existe 
      
       

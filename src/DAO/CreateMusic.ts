@@ -1,10 +1,10 @@
 import { Music } from '@prisma/client';
-import { MusicSchema } from '../interfaces/MusicSchema';
+import { MusicInterface } from '../interfaces/MusicInterface';
 import { prismaClient } from '../database/prismaClient';
 import { AppError } from '../errors/AppError';
 
 export class CreateMusic {
-   async execute({ title, photo, cantor, url_music, realease_date }: MusicSchema): Promise<Music> {
+   async execute({ title, photo, cantor, url_music, realease_date }: MusicInterface): Promise<Music> {
       const musicAlreadyExist = await prismaClient.music.findUnique({
          where: {
             title,
