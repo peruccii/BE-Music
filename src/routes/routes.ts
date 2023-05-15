@@ -10,7 +10,7 @@ import { CreatePlaylistUserController } from '../controllers/CreatePlaylistUserC
 import { CreateMusicPlaylistController } from '../controllers/CreateMusicPlaylistController';
 import { AuthUserController } from '../authUser/AuthUserController';
 import { ensureAuthentication } from '../middlewares/ensureAuthentication';
-
+import { createUserValidation } from '../controllers/CreateUserController';
 
 const createUserController = new CreateUserController();
 const createMusicController = new CreateMusicController();
@@ -26,7 +26,7 @@ const authUserController = new AuthUserController()
 
 const Routes = Router()
 
-Routes.post("/users", createUserController.handle)
+Routes.post("/users", createUserValidation, createUserController.handle)
 Routes.post("/login",authUserController.handle)
 Routes.post("/music", createMusicController.handle)
 Routes.post("/curtida", createMusicCurtida.handle)
