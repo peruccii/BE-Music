@@ -8,7 +8,6 @@ export class GetMusics {
           realease_date: "desc"
         }
       })
-
       return musics
    }
 }

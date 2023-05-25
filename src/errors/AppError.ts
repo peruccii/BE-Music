@@ -13,3 +13,9 @@ export class BadRequestError extends AppError {
     super(message, 400)
   }
 }
+
+export class UnknowRoute extends AppError {
+  constructor(message: string , statusCode: number) {
+    super(message, statusCode);
+  }
+}

@@ -3,10 +3,7 @@ import { prismaClient } from '../database/prismaClient';
 import { AppError } from '../errors/AppError';
 
 export class CreatePlaylistUser {
-   async execute({ playlistId, userId }: PlaylistUserInterface ): Promise<void> { // void
-      //Verificar se a playlist existe
-     
-      
+   async execute({ playlistId, userId }: PlaylistUserInterface ): Promise<void> {       
       const playlistAlreadyExist = await prismaClient.playlist.findUnique({
          where: {
             id: playlistId,
@@ -17,7 +14,6 @@ export class CreatePlaylistUser {
          throw new AppError("Music does not exist", 400)
       }
 
-      // Verificar se o usuario ja existe
       const userExists = await prismaClient.user.findUnique({
          where: {
             id: userId,
@@ -27,12 +23,11 @@ export class CreatePlaylistUser {
          throw new AppError("User does not exist", 400)
       }
 
-      //Criar o relacionamento entre playlist e usuario
       await prismaClient.playlistUser.create({
          data: {
             playlistId,
             userId
-         } // nao vamos retornar o resultado, pq como é uma CRIACAO de relacionamento, a promise dele vai ser VOID
+         } 
       })
      
    }

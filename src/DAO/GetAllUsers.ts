@@ -1,13 +1,15 @@
-import {  User } from '@prisma/client';
+import { Request, Response } from 'express';
 import { prismaClient } from '../database/prismaClient';
+import { User } from '@prisma/client';
 
 export class GetAllUsers {
-   async execute(): Promise<User[]> {
+  async execute(req: Request, res: Response): Promise<void> {
+    try {
       const users = await prismaClient.user.findMany({
         orderBy: {
-          id: "desc",
+          id: 'desc',
         },
-        include: { 
+        include: {
           music_curtida: {
             select: {
               music: {
@@ -16,12 +18,12 @@ export class GetAllUsers {
                   photo: true,
                   title: true,
                   cantor: true,
-                  url_music: true
-                }
-              }
-            }
+                  url_music: true,
+                },
+              },
+            },
           },
-          MusicFavorita : {
+          MusicFavorita: {
             select: {
               music: {
                 select: {
@@ -29,12 +31,12 @@ export class GetAllUsers {
                   photo: true,
                   title: true,
                   cantor: true,
-                  url_music: true
-                }
-              }
-            }
+                  url_music: true,
+                },
+              },
+            },
           },
-          Playlists : {
+          Playlists: {
             select: {
               playlist: {
                 select: {
@@ -49,17 +51,22 @@ export class GetAllUsers {
                           id: true,
                           photo: true,
                           title: true,
-                          cantor: true
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      })
-      return users
-   }
+                          cantor: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      res.json({ users: users });
+    } catch (error) {
+      console.error('Erro ao buscar usuários:', error);
+      res.status(500).json({ error: 'Ocorreu um erro ao buscar os usuários' });
+    }
+  }
 }
