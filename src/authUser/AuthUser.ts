@@ -4,17 +4,17 @@ import { compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken'
 
 interface UserAuthSchema {
-  name: string
+  email: string
   senha: string
  
 }
 
 export class AuthUser {
-  async execute({name, senha}: UserAuthSchema) {
+  async execute({email, senha}: UserAuthSchema) {
     
     const userAlreadyExists = await prismaClient.user.findFirst({
       where: {
-        name
+        email
       }
     })
  
@@ -38,3 +38,4 @@ export class AuthUser {
     return {User, token}
   }
 }
+

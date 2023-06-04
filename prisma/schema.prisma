@@ -15,11 +15,14 @@ model User {
   name          String
   email         String          @unique
   senha         String
+  saldo         Int             @default(0)
   created_at    DateTime        @default(now())
   updated_at    DateTime        @updatedAt
   music_curtida MusicCurtida[]  @relation("user")
   MusicFavorita MusicFavorita[] @relation("user")
   Playlists     PlaylistUser[]  @relation("user")
+  TenisCurtida  TenisCurtida[]  @relation("user")
+  TenisFavorito TenisFavorito[] @relation("user")
 
   @@map("users")
 }
@@ -85,4 +88,96 @@ model MusicFavorita {
 
   @@id([userId, musicId])
   @@map("music_favorita")
+}
+
+model Sneaker {
+  id            String          @id @default(uuid())
+  name          String          @unique
+  photo         String
+  description   String
+  number        Int
+  new_sneaker   Boolean
+  price         Float
+  fast_sell     Boolean
+  created_at    DateTime        @default(now())
+  TenisCurtida  TenisCurtida[]  @relation("tenis")
+  TenisFavorito TenisFavorito[] @relation("tenis")
+  Marca         TenisBrand[]    @relation("tenis")
+  TenisCarrinho TenisCarrinho[] @relation("tenis")
+  TenisSize     TenisSize[]     @relation("tenis")
+
+  @@map("sneaker")
+}
+
+model Brand {
+  id         String       @id @default(uuid())
+  name       String       @unique
+  photo      String
+  TenisBrand TenisBrand[] @relation("marca")
+
+  @@map("marcas")
+}
+
+model TenisBrand {
+  tenis   Sneaker @relation("tenis", fields: [tenisId], references: [id])
+  tenisId String
+  marca   Brand   @relation("marca", fields: [marcaId], references: [id])
+  marcaId String
+
+  @@id([tenisId, marcaId])
+  @@map("tenis_marca")
+}
+
+model Size {
+  id        String      @id @default(uuid())
+  sizes     String
+  TenisSize TenisSize[] @relation("sizes")
+
+  @@map("sizes")
+}
+
+model TenisSize {
+  tenis   Sneaker @relation("tenis", fields: [tenisId], references: [id])
+  tenisId String
+  sizes   Size    @relation("sizes", fields: [sizeId], references: [id])
+  sizeId  String
+
+  @@id([tenisId, sizeId])
+  @@map("tenis_size")
+}
+
+model TenisCurtida {
+  user    User    @relation("user", fields: [userId], references: [id])
+  userId  String
+  tenis   Sneaker @relation("tenis", fields: [tenisId], references: [id])
+  tenisId String
+
+  @@id([userId, tenisId])
+  @@map("tenis_curtida")
+}
+
+model TenisFavorito {
+  user    User    @relation("user", fields: [userId], references: [id])
+  userId  String
+  tenis   Sneaker @relation("tenis", fields: [tenisId], references: [id])
+  tenisId String
+
+  @@id([userId, tenisId])
+  @@map("tenis_favorito")
+}
+
+model Carrinho {
+  id            String          @id @default(uuid())
+  nome          String          @unique
+  TenisCarrinho TenisCarrinho[] @relation("carrinho")
+}
+
+model TenisCarrinho {
+  tenis      Sneaker  @relation("tenis", fields: [tenisId], references: [id])
+  tenisId    String
+  carrinho   Carrinho @relation("carrinho", fields: [carrinhoId], references: [id])
+  carrinhoId String
+
+  @@id([tenisId, carrinhoId])
+  @@map("tenis_carrinho")
 }

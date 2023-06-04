@@ -13,9 +13,11 @@ import { ensureAuthentication } from '../middlewares/ensureAuthentication';
 import { createUserValidation } from '../controllers/CreateUserController';
 import { UnknowRoute } from '../errors/AppError';
 import { GetUserUnique } from '../DAO/GetUserUnique';
-const nodemailer = require("nodemailer");
-require('dotenv').config();
-import * as crypto from 'crypto'
+import { createBrandController } from '../controllers_sneaker/createBrandController';
+import { CreateSneakerBrandController } from '../controllers_sneaker/CreateSneakerBrandController';
+import { CreateSneakerController } from '../controllers_sneaker/CreateSneakerController';
+import { GetAllSneakersController } from '../controllers_sneaker/GetAllSneakersController';
+import { forgotPassword } from '../authUser/AuthUserController';
 
 const createUserController = new CreateUserController();
 const createMusicController = new CreateMusicController();
@@ -28,37 +30,18 @@ const createPlayListController = new CreatePlaylistUserController()
 const createMusicPlaylistController = new CreateMusicPlaylistController()
 const authUserController = new AuthUserController() 
 
+const CreateBrandController = new createBrandController()
+const createSneakerBrandController = new CreateSneakerBrandController()
+const createSneakerController = new CreateSneakerController()
+const getAllSneakersController = new GetAllSneakersController()
 
 const Routes = Router()
 
-const forgotPassword = async (request: Request, response: Response) => {
-const transporter = nodemailer.createTransport({
-  host: 'smtp.ethereal.email',
-  port: 3000,
-  secure: false,
-  auth: {
-    user: process.env.MY_EMAIL,
-    password: process.env.MY_PASSWORD
-  }
-})
+const nodemailer = require("nodemailer")
 
-const newPassword = crypto.randomBytes(4).toString('hex')
 
-transporter.sendMail({
-  from: process.env.MY_EMAIL,
-  to: process.env.MY_EMAIL,
-  subject: 'Olar',
-  text: `teste ${newPassword}`
-}).then(
-  () => {
-    return response.status(200).json({message: 'email enviado'})
-  }
-).catch(
-  () => {
-    return response.status(404).json({message: 'nao'})
-  }
-)
-}
+
+
 
 Routes.post("/users", createUserValidation, createUserController.handle)
 Routes.post("/login",authUserController.handle)
@@ -68,10 +51,40 @@ Routes.post("/favoritar", createMusicFavorita.handle)
 Routes.post("/playlist", createPlaylistController.handle)
 Routes.post("/playlistUser", createPlayListController.handle)
 Routes.post("/playlistMusic", createMusicPlaylistController.handle)
-Routes.post("/email", forgotPassword)
+Routes.post("/email", async (req, res) => {
+  var transport = nodemailer.createTransport({
+    host: "smtp-mail.outlook.com",
+    port: 587,
+    secure: false,
+    auth: {
+      user: "peruccii2917@hotmail.com",
+      pass: "eduardoejulia27"
+    }
+  })
+
+  let message = await transport.sendMail({
+    from: "peruccii2917@hotmail.com",
+    to: "rpsouza23@outlook.com",
+    subject: "Teste",
+    html: "<h1 >Oi mae</h1>"
+  })
+
+  res.send('email enviado com sucesso')
+  
+})
 Routes.get("/music", getMusicsController.handle )
 Routes.get("/users", /*ensureAuthentication*/ getAllUsersController.handle)
 Routes.get('/user/:id', GetUserUnique )
+
+
+Routes.post("/brand", CreateBrandController.handle)
+Routes.post("/sneakerBrand", createSneakerBrandController.handle)
+Routes.post("/sneaker", createSneakerController.handle)
+Routes.get("/sneaker", getAllSneakersController.handle)
+
+
+Routes.post('/forgot-password', forgotPassword)
+
 
 
 Routes.use(function(req, res, next) {

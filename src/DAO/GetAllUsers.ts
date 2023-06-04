@@ -60,6 +60,36 @@ export class GetAllUsers {
               },
             },
           },
+          TenisCurtida: {
+            select: {
+              tenis: {
+                select: {
+                  id: true,
+                  photo: true,
+                  name: true,
+                  description: true,
+                  price: true,
+                  number: true,
+                  new_sneaker: true
+                }
+              }
+            }
+          },
+          TenisFavorito: {
+            select: {
+              tenis: {
+                select: {
+                  id: true,
+                  photo: true,
+                  name: true,
+                  description: true,
+                  price: true,
+                  number: true,
+                  new_sneaker: true
+                }
+              }
+            }
+          }
         },
       });
 
