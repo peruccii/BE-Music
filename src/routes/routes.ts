@@ -18,6 +18,7 @@ import { CreateSneakerBrandController } from '../controllers_sneaker/CreateSneak
 import { CreateSneakerController } from '../controllers_sneaker/CreateSneakerController';
 import { GetAllSneakersController } from '../controllers_sneaker/GetAllSneakersController';
 import { forgotPassword } from '../authUser/AuthUserController';
+import { log } from 'console';
 
 const createUserController = new CreateUserController();
 const createMusicController = new CreateMusicController();
@@ -38,7 +39,7 @@ const getAllSneakersController = new GetAllSneakersController()
 const Routes = Router()
 
 const nodemailer = require("nodemailer")
-
+const stripe = require('stripe')('sk_test_51NFmiuB44rleyHUGDyWn2d7P48h5BMW19mZg0ujRGtqaR8Y6rs20B0wxqtMvBB0i96E6ocxJAO8ckFHuKQG7kaB000LooKGoZ0')
 
 
 
@@ -85,7 +86,28 @@ Routes.get("/sneaker", getAllSneakersController.handle)
 
 Routes.post('/forgot-password', forgotPassword)
 
+Routes.post('/create-checkout-session', async (req, res) => {
+  const session = await stripe.checkout.sessions.create({
+    line_items: [
+      {
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: 'T-shirt',
+          },
+          unit_amount: 2000,
+        },
+        quantity: 1,
+      },
+    ],
+    mode: 'payment',
+    success_url: 'http://localhost:3000/success',
+    cancel_url: 'http://localhost:3000/cancel',
+  })
 
+  
+  res.send({ url: session.url })
+})
 
 Routes.use(function(req, res, next) {
   throw new UnknowRoute('Unknown route', 404);
